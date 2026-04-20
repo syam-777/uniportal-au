@@ -1,8 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UniPortal AU</title>
+
+  <!-- PWA Lines -->
+  <meta name="theme-color" content="#00d4ff"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon-192.png"/>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
   --bg:#070b14;--bg2:#0b1120;--bg3:#0f1729;--card:#111827;--card2:#162035;
   --border:#1a2540;--border2:#233050;--accent:#00d4ff;--accent2:#7c3aed;
   --gold:#f59e0b;--green:#10b981;--red:#ef4444;--pink:#ec4899;
@@ -855,3 +866,15 @@ function showRec(){
   el.innerHTML=`<b style="color:var(--accent)">Recommended for ${recSel.branch} → ${recSel.goal}:</b><br>${rec}`;
 }
 </script>
+<script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(() => console.log('UniPortal SW Ready'))
+          .catch(err => console.log('SW Error:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
