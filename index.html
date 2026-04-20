@@ -1,0 +1,857 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#070b14;--bg2:#0b1120;--bg3:#0f1729;--card:#111827;--card2:#162035;
+  --border:#1a2540;--border2:#233050;--accent:#00d4ff;--accent2:#7c3aed;
+  --gold:#f59e0b;--green:#10b981;--red:#ef4444;--pink:#ec4899;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#4a5568;
+  --grad:linear-gradient(135deg,#00d4ff,#7c3aed);
+}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;}
+.topbar{background:rgba(11,17,32,0.97);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;backdrop-filter:blur(10px);}
+.logo-wrap{display:flex;flex-direction:column;}
+.logo{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-sub{font-size:10px;color:var(--text2);letter-spacing:2px;margin-top:-2px;}
+.topbar-mid{display:flex;gap:8px;align-items:center;}
+.sel{background:var(--card);border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;display:none;}
+.topbar-right{display:flex;gap:8px;}
+.tbtn{padding:6px 14px;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:1px;transition:.2s;}
+.tbtn-u{background:transparent;border:1px solid var(--accent);color:var(--accent);}
+.tbtn-u:hover{background:var(--accent);color:#000;}
+.tbtn-a{background:transparent;border:1px solid var(--accent2);color:var(--accent2);}
+.tbtn-a:hover{background:var(--accent2);color:#fff;}
+.screen{display:none;min-height:calc(100vh - 58px);}
+.screen.on{display:block;}
+/* LOGIN */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 58px);background:radial-gradient(ellipse at 15% 60%,rgba(0,212,255,.06),transparent 50%),radial-gradient(ellipse at 85% 20%,rgba(124,58,237,.08),transparent 50%);}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:44px 38px;width:400px;text-align:center;box-shadow:0 0 80px rgba(0,212,255,.05);}
+.l-icon{width:60px;height:60px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;}
+.l-title{font-family:'Orbitron',monospace;font-size:18px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.l-sub{color:var(--text2);font-size:13px;margin-bottom:28px;}
+.inp-g{margin-bottom:14px;text-align:left;}
+.inp-g label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;letter-spacing:1px;}
+.inp-g input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;transition:.2s;}
+.inp-g input:focus{border-color:var(--accent);}
+.l-btn{width:100%;padding:12px;border-radius:8px;background:var(--grad);border:none;color:#000;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px;letter-spacing:2px;transition:.2s;}
+.l-btn:hover{opacity:.85;}
+.l-err{color:var(--red);font-size:12px;margin-top:8px;display:none;}
+/* DASHBOARD */
+.dash{display:flex;min-height:calc(100vh - 58px);}
+.sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;display:flex;flex-direction:column;}
+.su{padding:14px 18px 20px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.su-av{width:44px;height:44px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:8px;}
+.su-name{font-weight:700;font-size:14px;}
+.su-reg{color:var(--text2);font-size:11px;letter-spacing:1px;}
+.nv{display:flex;align-items:center;gap:10px;padding:11px 18px;cursor:pointer;transition:.2s;border-left:3px solid transparent;color:var(--text2);font-size:14px;font-weight:600;}
+.nv:hover{background:var(--card);color:var(--text);}
+.nv.on{background:var(--card);color:var(--accent);border-left-color:var(--accent);}
+.nv-ic{font-size:16px;width:20px;text-align:center;}
+.logout-nv{margin-top:auto;padding:0 18px 16px;}
+.main{flex:1;padding:28px;overflow-y:auto;max-height:calc(100vh - 58px);}
+.pg{display:none;}
+.pg.on{display:block;}
+.pg-title{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;margin-bottom:4px;}
+.pg-sub{color:var(--text2);font-size:13px;margin-bottom:24px;}
+/* CARDS */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;transition:.2s;cursor:pointer;}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.07);}
+.c-ic{font-size:26px;margin-bottom:10px;}
+.c-tt{font-size:15px;font-weight:700;margin-bottom:5px;}
+.c-ds{color:var(--text2);font-size:12px;line-height:1.5;}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;margin-top:8px;}
+.bg-b{background:rgba(0,212,255,.1);color:var(--accent);}
+.bg-g{background:rgba(16,185,129,.12);color:var(--green);}
+.bg-a{background:rgba(245,158,11,.12);color:var(--gold);}
+.bg-p{background:rgba(124,58,237,.12);color:#a78bfa;}
+.bg-r{background:rgba(239,68,68,.12);color:var(--red);}
+/* BACK BTN */
+.bk{background:var(--card);border:1px solid var(--border2);color:var(--text2);padding:7px 14px;border-radius:7px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:13px;transition:.2s;}
+.bk:hover{border-color:var(--accent);color:var(--accent);}
+.lhdr{display:flex;align-items:center;gap:14px;margin-bottom:24px;}
+/* TOPIC LIST */
+.tlist{display:flex;flex-direction:column;gap:10px;}
+.titem{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:.2s;}
+.titem:hover{border-color:var(--accent);background:var(--card2);}
+.ti-name{font-size:14px;font-weight:600;}
+.ti-arr{color:var(--accent);}
+/* SUBTOPIC */
+.stlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:20px;}
+.stitem{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s;text-align:center;}
+.stitem:hover,.stitem.on{border-color:var(--accent);color:var(--accent);}
+/* CONTENT BOX */
+.cbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.cbox h3{font-family:'Orbitron',monospace;font-size:13px;color:var(--accent);margin:18px 0 8px;letter-spacing:1px;}
+.cbox p{color:var(--text2);line-height:1.7;margin-bottom:10px;font-size:14px;}
+.cbox ul{color:var(--text2);padding-left:18px;line-height:2;font-size:14px;}
+.cbox pre{background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:14px;font-size:12px;overflow-x:auto;margin:10px 0;color:#6ee7b7;line-height:1.6;}
+.vlink{display:inline-flex;align-items:center;gap:6px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#f87171;padding:8px 16px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:600;margin:6px 4px 0;}
+.vlink:hover{background:rgba(239,68,68,.2);}
+.ilink{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);color:var(--accent);padding:8px 16px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:600;margin:6px 4px 0;}
+.img-box{width:100%;max-width:340px;height:180px;object-fit:cover;border-radius:10px;border:1px solid var(--border2);margin:12px 0;}
+/* PORTAL LINKS */
+.plink{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;text-decoration:none;transition:.2s;}
+.plink:hover{border-color:var(--accent);transform:translateX(4px);}
+.p-ic{font-size:28px;}
+.p-nm{font-size:15px;font-weight:700;color:var(--text);}
+.p-url{font-size:12px;color:var(--accent);}
+.p-ds{font-size:12px;color:var(--text2);margin-top:3px;}
+/* ROADMAP */
+.rmcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:14px;}
+.rm-title{font-size:17px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.rm-steps{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.rmstep{background:var(--card2);border:1px solid var(--border2);border-radius:16px;padding:5px 12px;font-size:12px;color:var(--text2);}
+.rm-arr{color:var(--accent2);font-size:12px;}
+.rm-desc{color:var(--text2);font-size:13px;line-height:1.6;}
+.rm-img{width:100%;max-width:500px;display:block;margin:14px auto;border-radius:10px;border:1px solid var(--border2);}
+/* SLO */
+.slo-hero{background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,58,237,.1));border:1px solid var(--border2);border-radius:14px;padding:32px;text-align:center;margin-bottom:24px;}
+.slo-hero h2{font-family:'Orbitron',monospace;font-size:18px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+.slo-hero p{color:var(--text2);font-size:14px;}
+.slo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:24px;}
+.slo-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:.2s;cursor:pointer;}
+.slo-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.slo-ic{font-size:28px;margin-bottom:10px;}
+.slo-tt{font-size:15px;font-weight:700;margin-bottom:6px;}
+.slo-ds{color:var(--text2);font-size:12px;line-height:1.5;margin-bottom:8px;}
+.slo-skills{font-size:11px;color:var(--accent);font-weight:600;}
+.slo-why{font-size:11px;color:var(--gold);margin-top:4px;}
+/* RECOMMEND */
+.rec-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:22px;margin-bottom:20px;}
+.rec-box h3{font-family:'Orbitron',monospace;font-size:13px;color:var(--accent2);margin-bottom:14px;letter-spacing:1px;}
+.rec-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.rec-btn{padding:7px 14px;border-radius:8px;background:var(--card2);border:1px solid var(--border2);color:var(--text2);font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;transition:.2s;}
+.rec-btn.on{background:rgba(0,212,255,.1);border-color:var(--accent);color:var(--accent);}
+.rec-out{background:var(--bg3);border-radius:10px;padding:14px;margin-top:12px;color:var(--text2);font-size:13px;line-height:1.8;display:none;}
+/* OUTCOMES */
+.out-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.out-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.out-num{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.out-lbl{color:var(--text2);font-size:12px;margin-top:4px;}
+/* STORY */
+.story{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(0,212,255,.05));border:1px solid var(--border2);border-radius:12px;padding:22px;margin-bottom:24px;}
+.story-name{font-size:16px;font-weight:700;margin-bottom:6px;}
+.story-text{color:var(--text2);font-size:13px;line-height:1.7;}
+/* ADMIN */
+.adm-wrap{padding:28px;}
+.adm-title{font-family:'Orbitron',monospace;font-size:18px;color:var(--accent2);margin-bottom:6px;}
+.adm-sub{color:var(--text2);font-size:13px;margin-bottom:24px;}
+.adm-tabs{display:flex;gap:8px;margin-bottom:20px;}
+.atab{padding:8px 18px;border-radius:8px;background:var(--card);border:1px solid var(--border2);color:var(--text2);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;}
+.atab.on{background:rgba(124,58,237,.15);border-color:var(--accent2);color:#a78bfa;}
+.aform{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:600px;display:none;}
+.aform.on{display:block;}
+.fr{margin-bottom:14px;}
+.fr label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;letter-spacing:1px;}
+.fr input,.fr textarea,.fr select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:9px 13px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;}
+.fr textarea{height:90px;resize:vertical;}
+.diff-tabs{display:flex;gap:6px;margin-bottom:10px;}
+.dtab{padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:.2s;}
+.dtab-e{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.2);}
+.dtab-m{background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.2);}
+.dtab-h{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.dtab.on{opacity:1;transform:scale(1.05);}
+.sub-btn{background:var(--accent2);border:none;color:#fff;padding:10px 24px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;margin-top:4px;}
+.posted-list{margin-top:16px;display:flex;flex-direction:column;gap:10px;}
+.posted-item{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:14px;}
+.pi-title{font-weight:700;font-size:14px;margin-bottom:4px;}
+.pi-meta{color:var(--text2);font-size:12px;}
+.pi-link a{color:var(--accent);font-size:12px;}
+.diff-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;margin-left:8px;}
+/* FOOTER */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 28px 20px;margin-top:32px;}
+.f-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-bottom:28px;}
+.f-col h4{font-family:'Orbitron',monospace;font-size:12px;color:var(--accent);margin-bottom:10px;letter-spacing:2px;}
+.f-col p,.f-col a{color:var(--text2);font-size:12px;line-height:2.1;display:block;text-decoration:none;}
+.f-col a:hover{color:var(--accent);}
+.f-bot{border-top:1px solid var(--border);padding-top:18px;text-align:center;}
+.f-logo{font-family:'Orbitron',monospace;font-size:15px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+.f-quote{color:var(--text2);font-size:13px;font-style:italic;margin-bottom:8px;}
+.f-copy{color:var(--text3);font-size:11px;}
+</style>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-wrap">
+    <div class="logo">UniPortal AU</div>
+    <div class="logo-sub">ANDHRA UNIVERSITY</div>
+  </div>
+  <div class="topbar-mid" id="selWrap">
+    <select class="sel" id="yrSel" onchange="onSelChange()">
+      <option value="1">1st Year</option>
+      <option value="2">2nd Year</option>
+      <option value="3">3rd Year</option>
+    </select>
+    <select class="sel" id="deptSel" onchange="onSelChange()">
+      <option value="cse">CSE</option>
+      <option value="ece">ECE</option>
+      <option value="ee">EE</option>
+      <option value="civil">Civil</option>
+      <option value="mechanical">Mechanical</option>
+      <option value="chemical">Chemical</option>
+    </select>
+  </div>
+  <div class="topbar-right">
+    <button class="tbtn tbtn-u" onclick="showLogin('user')">USER LOGIN</button>
+    <button class="tbtn tbtn-a" onclick="showLogin('admin')">ADMIN LOGIN</button>
+  </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div class="screen on" id="scLogin">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="l-icon" id="lIcon">🎓</div>
+      <div class="l-title" id="lTitle">STUDENT LOGIN</div>
+      <div class="l-sub" id="lSub">Enter your credentials to access UniPortal AU</div>
+      <div class="inp-g"><label>REGISTRATION NUMBER</label><input type="text" id="regIn" placeholder="e.g. 325106410001"/></div>
+      <div class="inp-g"><label>PASSWORD</label><input type="password" id="pwIn" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="l-btn" onclick="doLogin()">ACCESS PORTAL</button>
+      <div class="l-err" id="lErr">Invalid credentials. Please try again.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT DASHBOARD -->
+<div class="screen" id="scDash">
+  <div class="dash">
+    <div class="sidebar">
+      <div class="su">
+        <div class="su-av">👤</div>
+        <div class="su-name" id="sideName">AU Student</div>
+        <div class="su-reg" id="sideReg">325106410001</div>
+      </div>
+      <div class="nv on" onclick="goPage('pgLabs')" id="nv-pgLabs"><span class="nv-ic">🔬</span>Labs</div>
+      <div class="nv" onclick="goPage('pgEvents')" id="nv-pgEvents"><span class="nv-ic">🏆</span>Events & Hackathons</div>
+      <div class="nv" onclick="goPage('pgCourses')" id="nv-pgCourses"><span class="nv-ic">📜</span>Certificate Courses</div>
+      <div class="nv" onclick="goPage('pgRoadmap')" id="nv-pgRoadmap"><span class="nv-ic">🗺️</span>Career Roadmaps</div>
+      <div class="nv" onclick="goPage('pgSlo')" id="nv-pgSlo"><span class="nv-ic">⭐</span>Special Learning</div>
+      <div class="logout-nv"><div class="nv" onclick="logout()" style="padding:9px 0;border-left:none;"><span class="nv-ic">🚪</span><span style="color:var(--red)">Logout</span></div></div>
+    </div>
+    <div class="main" id="mainArea">
+
+      <!-- LABS PAGE -->
+      <div class="pg on" id="pgLabs">
+        <div id="labsView">
+          <div class="pg-title">🔬 Labs</div>
+          <div class="pg-sub" id="labsSubLabel">Select a lab to explore</div>
+          <div class="cgrid" id="labsGrid"></div>
+          <div id="adminEventsOnLab" style="margin-top:20px;"></div>
+        </div>
+        <div id="labTopicsView" style="display:none;">
+          <div class="lhdr"><button class="bk" onclick="backToLabs()">← Back</button><div><div class="pg-title" id="ltTitle"></div><div class="pg-sub">Select a topic</div></div></div>
+          <div class="tlist" id="topicList"></div>
+        </div>
+        <div id="subTopicsView" style="display:none;">
+          <div class="lhdr"><button class="bk" onclick="backToTopics()">← Back</button><div class="pg-title" id="stTitle"></div></div>
+          <div id="stSubList" class="stlist"></div>
+          <div class="cbox" id="stContent"></div>
+        </div>
+        <div id="topicContentView" style="display:none;">
+          <div class="lhdr"><button class="bk" onclick="backToTopics()">← Back</button><div class="pg-title" id="tcTitle"></div></div>
+          <div class="cbox" id="tcContent"></div>
+        </div>
+      </div>
+
+      <!-- EVENTS PAGE -->
+      <div class="pg" id="pgEvents">
+        <div class="pg-title">🏆 Events & Hackathons</div>
+        <div class="pg-sub">Latest competitions, hackathons, and tech events</div>
+        <div class="cgrid">
+          <div class="card"><div class="c-ic">🚀</div><div class="c-tt">HackFest 2025</div><div class="c-ds">24-hour national hackathon. Build innovative solutions for real-world problems.</div><span class="badge bg-a">May 10, 2025</span></div>
+          <div class="card"><div class="c-ic">💻</div><div class="c-tt">CodeSprint AU</div><div class="c-ds">Competitive coding contest. Prizes up to ₹20,000.</div><span class="badge bg-g">May 22, 2025</span></div>
+          <div class="card"><div class="c-ic">🤖</div><div class="c-tt">AI Innovation Challenge</div><div class="c-ds">Build AI-powered solutions. Grand prize ₹1,00,000.</div><span class="badge bg-a">June 15, 2025</span></div>
+          <div class="card"><div class="c-ic">🎨</div><div class="c-tt">Design-a-thon</div><div class="c-ds">UI/UX design competition for social good.</div><span class="badge bg-b">July 1, 2025</span></div>
+          <div class="card"><div class="c-ic">🇮🇳</div><div class="c-tt">Smart India Hackathon</div><div class="c-ds">Government-sponsored national hackathon.</div><span class="badge bg-g">June 20, 2025</span></div>
+          <div class="card"><div class="c-ic">📡</div><div class="c-tt">IoT Summit Hackathon</div><div class="c-ds">Build IoT solutions for smart cities and healthcare.</div><span class="badge bg-p">July 15, 2025</span></div>
+        </div>
+        <div id="adminEventsFeed" style="margin-top:20px;"></div>
+      </div>
+
+      <!-- COURSES PAGE -->
+      <div class="pg" id="pgCourses">
+        <div class="pg-title">📜 Certificate Courses</div>
+        <div class="pg-sub" id="courseSubLabel">Top learning portals for your department</div>
+        <div id="courseLinks"></div>
+      </div>
+
+      <!-- ROADMAP PAGE -->
+      <div class="pg" id="pgRoadmap">
+        <div class="pg-title">🗺️ Career Roadmaps</div>
+        <div class="pg-sub">Personalized career guidance for your department</div>
+        <div id="roadmapContent"></div>
+      </div>
+
+      <!-- SLO PAGE -->
+      <div class="pg" id="pgSlo">
+        <div class="slo-hero">
+          <h2>Explore Learning Opportunities at Andhra University</h2>
+          <p>Turn opportunities into skills, projects, and careers</p>
+        </div>
+        <div class="out-grid">
+          <div class="out-card"><div class="out-num">1200+</div><div class="out-lbl">Placed in Jobs</div></div>
+          <div class="out-card"><div class="out-num">340+</div><div class="out-lbl">Research Papers</div></div>
+          <div class="out-card"><div class="out-num">180+</div><div class="out-lbl">Projects Built</div></div>
+          <div class="out-card"><div class="out-num">45+</div><div class="out-lbl">Startups Founded</div></div>
+        </div>
+        <div class="rec-box">
+          <h3>SMART RECOMMENDATION</h3>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Select your branch and goal to get personalized recommendations</div>
+          <div class="rec-row" id="recBranch">
+            <button class="rec-btn" onclick="setRec('branch','CSE')">CSE</button>
+            <button class="rec-btn" onclick="setRec('branch','ECE')">ECE</button>
+            <button class="rec-btn" onclick="setRec('branch','EE')">EE</button>
+            <button class="rec-btn" onclick="setRec('branch','Mechanical')">Mechanical</button>
+            <button class="rec-btn" onclick="setRec('branch','Civil')">Civil</button>
+            <button class="rec-btn" onclick="setRec('branch','Chemical')">Chemical</button>
+          </div>
+          <div class="rec-row" id="recGoal">
+            <button class="rec-btn" onclick="setRec('goal','Job')">Job</button>
+            <button class="rec-btn" onclick="setRec('goal','Research')">Research</button>
+            <button class="rec-btn" onclick="setRec('goal','Startup')">Startup</button>
+          </div>
+          <div class="rec-out" id="recOut"></div>
+        </div>
+        <div class="slo-grid">
+          <div class="slo-card"><div class="slo-ic">🏗️</div><div class="slo-tt">Skill Development Centre</div><div class="slo-ds">Industry-level software and equipment training. Bridges college learning and job requirements with hands-on workshops.</div><div class="slo-skills">Skills: AutoCAD · MATLAB · Python · Cloud</div><div class="slo-why">Why it matters: Direct pathway to job readiness</div></div>
+          <div class="slo-card"><div class="slo-ic">🔭</div><div class="slo-tt">Research & Advanced Programs</div><div class="slo-ds">M.Phil, Ph.D., Quantum Computing B.Tech, Oceanic Sciences. Funded projects with DRDO, ISRO, DST.</div><div class="slo-skills">Skills: Research · Innovation · Academic Writing</div><div class="slo-why">Why it matters: Opens doors to global research careers</div></div>
+          <div class="slo-card"><div class="slo-ic">🔐</div><div class="slo-tt">Cyber Labs & Digital Learning</div><div class="slo-ds">Dedicated Cyber Lab with IEEE Xplore, Scopus access. CTF competitions and live cybersecurity challenges.</div><div class="slo-skills">Skills: Cybersecurity · Networking · Digital Tools</div><div class="slo-why">Why it matters: High-demand security skills</div></div>
+          <div class="slo-card"><div class="slo-ic">📚</div><div class="slo-tt">Library & Academic Resources</div><div class="slo-ds">Dr. V.S. Krishna Library — 4 lakh books, 24/7 reading rooms, national & international journals.</div><div class="slo-skills">Skills: Research · Self-learning · Competitive Exams</div><div class="slo-why">Why it matters: Best prep for GATE, GRE, UPSC</div></div>
+          <div class="slo-card"><div class="slo-ic">🌍</div><div class="slo-tt">International Programs</div><div class="slo-ds">Collaborations with foreign universities (Sweden & others). Exchange programs, joint degrees, global internships.</div><div class="slo-skills">Skills: Global Exposure · Cross-cultural · Languages</div><div class="slo-why">Why it matters: Global career opportunities</div></div>
+          <div class="slo-card"><div class="slo-ic">🤝</div><div class="slo-tt">Student Engagement Programs</div><div class="slo-ds">"Sandhya" program — faculty interaction, peer learning, mentorship. IEEE, ACM, CSI, SAE student chapters.</div><div class="slo-skills">Skills: Leadership · Networking · Communication</div><div class="slo-why">Why it matters: Builds professional network early</div></div>
+          <div class="slo-card"><div class="slo-ic">💻</div><div class="slo-tt">Distance & Online Learning</div><div class="slo-ds">UGC/AICTE-recognized online UG & PG programs. SWAYAM and NPTEL integration for academic credits.</div><div class="slo-skills">Skills: Self-paced · Online Certifications</div><div class="slo-why">Why it matters: Flexibility for working students</div></div>
+        </div>
+        <div class="story">
+          <div style="font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:8px;">STUDENT SUCCESS STORY</div>
+          <div class="story-name">Priya Sharma — CSE 2023 Batch</div>
+          <div class="story-text">Priya joined the Skill Development Centre in her 2nd year, earned NPTEL certifications in Machine Learning, participated in Smart India Hackathon, and used the Cyber Lab to work on her final year project. She secured a placement at a leading tech company with a ₹12 LPA package — crediting AU's learning ecosystem for giving her the edge she needed.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="f-grid">
+      <div class="f-col">
+        <div class="f-logo">UniPortal AU</div>
+        <p>Your all-in-one academic companion at Andhra University, Visakhapatnam.</p>
+      </div>
+      <div class="f-col">
+        <h4>QUICK LINKS</h4>
+        <a href="#">Labs</a><a href="#">Events & Hackathons</a><a href="#">Certificate Courses</a><a href="#">Career Roadmaps</a><a href="#">Special Learning</a>
+      </div>
+      <div class="f-col">
+        <h4>CONTACT</h4>
+        <p>Andhra University, Visakhapatnam</p><p>Andhra Pradesh — 530003</p><p>support@uniportalau.edu.in</p><p>+91 891 2844000</p>
+      </div>
+    </div>
+    <div class="f-bot">
+      <div class="f-quote">"Knowledge is the foundation. Skills are the structure. Opportunities are the sky."</div>
+      <div class="f-copy">© 2025 UniPortal AU · Andhra University · All Rights Reserved · Empowering every AU student</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN SCREEN -->
+<div class="screen" id="scAdmin">
+  <div class="adm-wrap">
+    <div class="adm-title">⚙️ ADMIN CONTROL PANEL</div>
+    <div class="adm-sub">Manage events, hackathons, and lab questions — visible to all students.</div>
+    <div class="adm-tabs">
+      <div class="atab on" onclick="admTab('evtForm')">Post Event/Hackathon</div>
+      <div class="atab" onclick="admTab('qForm')">Add Lab Questions</div>
+    </div>
+    <div class="aform on" id="evtForm">
+      <div class="fr"><label>EVENT TITLE</label><input type="text" id="evtTitle" placeholder="e.g. HackFest 2025"/></div>
+      <div class="fr"><label>DESCRIPTION</label><textarea id="evtDesc" placeholder="Brief description..."></textarea></div>
+      <div class="fr"><label>REGISTRATION LINK</label><input type="text" id="evtLink" placeholder="https://..."/></div>
+      <div class="fr"><label>IMAGE URL (optional)</label><input type="text" id="evtImg" placeholder="https://..."/></div>
+      <div class="fr"><label>EVENT DATE</label><input type="text" id="evtDate" placeholder="e.g. June 20, 2025"/></div>
+      <button class="sub-btn" onclick="postEvent()">POST EVENT →</button>
+      <div class="posted-list" id="evtPosted"></div>
+    </div>
+    <div class="aform" id="qForm">
+      <div class="fr"><label>LAB NAME</label><input type="text" id="qLab" placeholder="e.g. DSA Lab"/></div>
+      <div class="fr"><label>QUESTION</label><textarea id="qText" placeholder="Write the question..."></textarea></div>
+      <div class="fr"><label>ALGORITHM / SOLUTION</label><textarea id="qAlgo" placeholder="Write the algorithm or solution..."></textarea></div>
+      <div class="fr">
+        <label>DIFFICULTY</label>
+        <div class="diff-tabs">
+          <button class="dtab dtab-e on" onclick="setDiff('easy',this)">EASY</button>
+          <button class="dtab dtab-m" onclick="setDiff('medium',this)">MEDIUM</button>
+          <button class="dtab dtab-h" onclick="setDiff('hard',this)">HARD</button>
+        </div>
+      </div>
+      <button class="sub-btn" onclick="postQ()">ADD QUESTION →</button>
+      <div class="posted-list" id="qPosted"></div>
+    </div>
+    <div style="margin-top:24px;"><button class="bk" onclick="logout()">← Back to Login</button></div>
+  </div>
+</div>
+
+<script>
+const LABS={
+  '1_cse':[
+    {n:'Physics Lab',ic:'⚛️',t:['Newton\'s Rings','Diffraction Grating','Wedge Method','Cauchy\'s Constant','Double Refraction']},
+    {n:'C Programming Lab',ic:'💾',t:['Basics of C Programming','C Practice Questions']},
+    {n:'IT Essentials Lab',ic:'🖥️',t:['Computer Fundamentals','Operating Systems','MS Word','MS Excel','MS PowerPoint','Internet & Networking Basics']},
+    {n:'Communication Skills Lab',ic:'🗣️',t:['Phonetics','Group Discussions','Self Introduction','Body Language & Confidence Building']},
+    {n:'DSA Lab',ic:'🌲',t:['Basics of DSA','DSA Practice Questions'],hasSub:{'Basics of DSA':['Introduction','Data Structures','Algorithms','Types of Data Structures','Operations on Data Structures','Time and Space Complexity','Searching and Sorting Algorithms','Applications','Advantages','Conclusion']}},
+    {n:'Linux Lab',ic:'🐧',t:['Linux Commands & Guide']},
+  ],
+  '2_cse':[
+    {n:'COA Lab',ic:'💻',t:['Computer Organization Basics','Instruction Set Architecture','Memory Hierarchy','Pipelining Concepts']},
+    {n:'Java Lab',ic:'☕',t:['Core Java Concepts','OOP in Java','Java Collections','Java Programs']},
+    {n:'OS Lab',ic:'⚙️',t:['Process Management','Memory Management','File Systems','Deadlocks']},
+    {n:'C++ Algorithms Lab',ic:'🔢',t:['STL in C++','Sorting Algorithms','Graph Algorithms','Dynamic Programming']},
+    {n:'DBMS Lab',ic:'🗄️',t:['ER Diagrams','SQL Queries','Normalization','Transactions & ACID']},
+  ],
+  '3_cse':[
+    {n:'Data Comm & Networks Lab',ic:'📡',t:['OSI & TCP/IP Model','Socket Programming','Routing Algorithms','Network Security Basics']},
+    {n:'Python Programming Lab',ic:'🐍',t:['Python Basics','File Handling','Libraries: NumPy & Pandas','Python Projects']},
+    {n:'Soft Skills Lab',ic:'🎤',t:['Resume Writing','Interview Skills','Presentation Skills','Professional Communication']},
+    {n:'OOSE Lab',ic:'📐',t:['UML Diagrams','Design Patterns','Software Testing','Agile & SDLC']},
+    {n:'Machine Learning Lab',ic:'🧠',t:['ML Fundamentals','Supervised Learning','Unsupervised Learning','Model Evaluation']},
+    {n:'Cryptography & Network Security Lab',ic:'🔐',t:['Encryption Algorithms','RSA & AES','Digital Signatures','Network Attacks & Defence']},
+    {n:'Embedded Systems Design Lab',ic:'🔌',t:['Microcontroller Basics','Arduino Programming','RTOS Concepts','IoT Project Design']},
+  ],
+  '1_ece':[
+    {n:'DLD Lab',ic:'🔲',t:['Logic Gates Basics','Boolean Algebra','Combinational Circuits','Sequential Circuits']},
+    {n:'Physics Lab',ic:'⚛️',t:['Newton\'s Rings','Diffraction Grating','Wedge Method','Cauchy\'s Constant','Double Refraction']},
+    {n:'Electronic Devices & Circuits Lab',ic:'⚡',t:['Diode Characteristics','BJT Characteristics','FET Basics','Rectifier Circuits']},
+    {n:'English Language Lab',ic:'📖',t:['Phonetics','Group Discussions','Self Introduction','Body Language & Confidence Building']},
+    {n:'Electronic Circuit Analysis Lab',ic:'📐',t:['KVL & KCL Analysis','Thevenin & Norton Theorems','AC Circuit Analysis','Resonance Circuits']},
+    {n:'CPNM Lab',ic:'🧮',t:['Numerical Methods Intro','Root Finding Methods','Numerical Integration','C Programs for CPNM']},
+  ],
+  '2_ece':[
+    {n:'Python Programming Lab',ic:'🐍',t:['Python Basics','NumPy for Signal Processing','Matplotlib & Visualization','Python Programs']},
+    {n:'Analog Communications Lab',ic:'📻',t:['AM Modulation & Demodulation','FM Modulation & Demodulation','Signal-to-Noise Ratio','Communication Systems Overview']},
+    {n:'Signals & Systems Simulation Lab',ic:'📈',t:['Continuous Time Signals','Discrete Time Signals','Fourier Transform','MATLAB Signal Simulations']},
+    {n:'Microprocessors & Microcontrollers Lab',ic:'🔌',t:['8085 Architecture & Programming','8086 Programs','Arduino Basics','Interfacing Peripherals']},
+    {n:'Linear ICs & Pulse Circuits Lab',ic:'🔋',t:['Op-Amp Characteristics','Op-Amp Applications','Multivibrators','Timer Circuits (555)']},
+  ],
+  '3_ece':[
+    {n:'Linear ICs Advanced Lab',ic:'🔋',t:['Active Filters','Waveform Generators','Comparators','Voltage Regulators']},
+    {n:'Digital Communication Lab',ic:'📡',t:['PCM & Sampling','Digital Modulation (ASK/FSK/PSK)','Error Detection & Correction','Spread Spectrum Techniques']},
+    {n:'Java Lab',ic:'☕',t:['Core Java','Multithreading','Java Networking','Mini Project in Java']},
+    {n:'Antenna Simulation Lab',ic:'📶',t:['Antenna Types & Parameters','Dipole Antenna Design','Array Antennas','MATLAB Antenna Simulation']},
+    {n:'Digital Signal Processing Lab',ic:'🎛️',t:['DFT & FFT','FIR Filter Design','IIR Filter Design','DSP Applications']},
+    {n:'Microwave Engineering Lab',ic:'📟',t:['Microwave Components','Waveguide Measurements','S-Parameters','Microwave Antenna Design']},
+  ],
+  '1_ee':[
+    {n:'Physics Lab',ic:'⚛️',t:['Newton\'s Rings','Diffraction Grating','Wedge Method']},
+    {n:'Electrical Engineering Lab',ic:'⚡',t:['Ohm\'s Law Verification','Kirchhoff\'s Laws','Series & Parallel Circuits','Power Measurement']},
+    {n:'English Language Lab',ic:'📖',t:['Phonetics','Group Discussions','Self Introduction','Body Language & Confidence Building']},
+    {n:'Chemistry Lab',ic:'🧪',t:['Determination of Hardness of Water','Preparation of Polymers','Electrochemical Experiments','Corrosion Study']},
+    {n:'CPNM Lab',ic:'🧮',t:['Numerical Methods Intro','Root Finding Methods','Numerical Integration']},
+  ],
+  '2_ee':[
+    {n:'Electrical Networks Lab',ic:'🔌',t:['Network Theorems','Transient Analysis','Two-Port Networks','Resonance in Networks']},
+    {n:'Electrical Machines Lab',ic:'⚙️',t:['DC Generator Characteristics','DC Motor Speed Control','Transformer Testing','Induction Motor']},
+    {n:'Electronic Circuits Lab',ic:'📐',t:['Rectifier Circuits','Amplifier Circuits','Oscillator Circuits','Feedback Amplifiers']},
+    {n:'Electrical Measurements Lab',ic:'📏',t:['Measurement of Resistance','Measurement of Inductance','Energy Meter Calibration','Power Factor Measurement']},
+  ],
+  '3_ee':[
+    {n:'Power Electronics Lab',ic:'⚡',t:['SCR Characteristics','Inverter Circuits','Chopper Circuits','PWM Control Techniques']},
+    {n:'PDC Lab',ic:'🔧',t:['Protection Relays','Distance Protection','Overcurrent Relay Testing','Fault Analysis']},
+    {n:'PLCs Lab',ic:'🖥️',t:['PLC Architecture','Ladder Logic Programming','Automation Circuits','SCADA Basics']},
+    {n:'Control Systems Lab',ic:'🎛️',t:['Transfer Function Analysis','Bode Plot','Root Locus','PID Controller Design']},
+    {n:'Power Systems Simulation Lab',ic:'🌩️',t:['Load Flow Analysis','Fault Analysis Simulation','Power Factor Improvement','MATLAB Power Systems']},
+  ],
+  '1_civil':[
+    {n:'Physics Lab',ic:'⚛️',t:['Newton\'s Rings','Diffraction Grating']},
+    {n:'Engineering Geology Lab',ic:'🪨',t:['Rock Identification','Mineral Study','Geological Maps','Structural Geology Basics']},
+    {n:'English Language Lab',ic:'📖',t:['Phonetics','Group Discussions','Self Introduction']},
+    {n:'CPNM Lab',ic:'🧮',t:['Numerical Methods Intro','Root Finding Methods']},
+  ],
+  '2_civil':[
+    {n:'Mechanics of Solids Lab',ic:'🏛️',t:['Tension Test on MS Rod','Compression Test','Bending Test','Hardness Test']},
+    {n:'Fluid Mechanics Lab',ic:'💧',t:['Bernoulli\'s Theorem','Venturi Meter','Orifice Meter','Reynolds Experiment']},
+    {n:'Python Programming Lab',ic:'🐍',t:['Python Basics','File Handling','Data Analysis with Pandas','Python Mini Projects']},
+    {n:'Geotechnical Engineering Lab',ic:'🌍',t:['Grain Size Analysis','Atterberg Limits','Compaction Test','Bearing Capacity']},
+    {n:'Building Materials Lab',ic:'🧱',t:['Concrete Mix Design','Brick Testing','Aggregate Tests','Cement Strength Test']},
+  ],
+  '3_civil':[
+    {n:'Geotechnical Engineering Advanced Lab',ic:'🌍',t:['Consolidation Test','Shear Strength Test','Permeability Test','Foundation Design']},
+    {n:'Environmental Engineering Lab',ic:'🌿',t:['Water Quality Analysis','BOD & COD Tests','Waste Water Treatment','Air Quality Monitoring']},
+    {n:'Concrete Technology Lab',ic:'🏗️',t:['Workability Tests','Mix Design','Durability Tests','Non-Destructive Testing']},
+  ],
+  '1_mechanical':[
+    {n:'Physics Lab',ic:'⚛️',t:['Newton\'s Rings','Diffraction Grating']},
+    {n:'Electrical Technology Lab',ic:'⚡',t:['DC Circuits','AC Circuits','Transformer Basics','Electrical Machines Overview']},
+    {n:'English Language Lab',ic:'📖',t:['Phonetics','Group Discussions','Self Introduction']},
+    {n:'Chemistry Lab',ic:'🧪',t:['Lubricant Testing','Alloy Analysis','Polymer Synthesis','Corrosion Study']},
+    {n:'CPNM Lab',ic:'🧮',t:['Numerical Methods Intro','Root Finding Methods']},
+  ],
+  '2_mechanical':[
+    {n:'Strength of Materials Lab',ic:'🏗️',t:['Tension Test','Compression Test','Torsion Test','Impact Test']},
+    {n:'Manufacturing Technology Lab',ic:'🔩',t:['Lathe Operations','Drilling & Milling','Welding Techniques','Sheet Metal Work']},
+    {n:'Fuels & ICE Lab',ic:'🚗',t:['Fuel Properties Analysis','Calorific Value','IC Engine Performance','Emission Testing']},
+  ],
+  '3_mechanical':[
+    {n:'Industrial Engineering Lab',ic:'🏭',t:['Work Study & Method Study','Production Planning','Lean Manufacturing','Quality Control Charts']},
+    {n:'Python Programming Lab',ic:'🐍',t:['Python Basics','Engineering Calculations with Python','Simulation using Python','Mini Projects']},
+    {n:'Fluid Mechanics & Machinery Lab',ic:'💧',t:['Centrifugal Pump Test','Turbine Tests','Pipe Flow Experiments','Hydraulic Machines']},
+    {n:'Metrology & Mechatronics Lab',ic:'🔬',t:['Surface Roughness Measurement','Gear Measurement','Sensor Interfacing','PLC & Automation']},
+  ],
+  '1_chemical':[
+    {n:'Organic Chemistry Lab',ic:'🧬',t:['Organic Reactions','Functional Group Tests','Synthesis of Aspirin','Chromatography']},
+    {n:'Physics Lab',ic:'⚛️',t:['Newton\'s Rings','Diffraction Grating']},
+    {n:'General Engineering Lab',ic:'🔧',t:['Engineering Drawing Basics','AutoCAD Basics','Machine Parts Study']},
+    {n:'English Language Lab',ic:'📖',t:['Phonetics','Group Discussions','Self Introduction']},
+    {n:'Green Chemistry Lab',ic:'🌿',t:['Eco-friendly Synthesis','Biocatalysis','Solvent-free Reactions','Green Metrics']},
+    {n:'CPNM Lab',ic:'🧮',t:['Numerical Methods Intro','Root Finding Methods']},
+  ],
+  '2_chemical':[
+    {n:'Fluid Mechanics Lab',ic:'💧',t:['Flow Through Pipes','Bernoulli\'s Theorem','Pump Characteristics','Viscosity Measurement']},
+    {n:'Particle & Fluid Processing Lab',ic:'⚗️',t:['Sedimentation','Filtration','Crystallization','Drying Operations']},
+    {n:'Heat Transfer Lab',ic:'🌡️',t:['Conduction Experiments','Convection Heat Transfer','Radiation Study','Heat Exchanger Performance']},
+    {n:'Python Programming Lab',ic:'🐍',t:['Python Basics','Process Simulation with Python','Chemical Data Analysis','Mini Projects']},
+    {n:'General Chemical Technology Lab',ic:'🏭',t:['pH & Conductance Measurement','Distillation','Extraction','Chemical Equilibrium']},
+  ],
+  '3_chemical':[
+    {n:'Process Instrumentation & Control Lab',ic:'🎛️',t:['PID Controllers','Process Control Loop','Transducer Calibration','SCADA for Chemical Plants']},
+    {n:'Mass Transfer Lab',ic:'⚗️',t:['Absorption Column','Distillation Column','Liquid-Liquid Extraction','Adsorption Experiments']},
+    {n:'Chemical Reaction Engineering Lab',ic:'🔬',t:['CSTR Performance','PFR Experiments','Batch Reactor Study','Reaction Kinetics']},
+    {n:'Chemical Process Equipment Design Lab',ic:'🏭',t:['Heat Exchanger Design','Reactor Design Basics','Separation Equipment Design','ASPEN Simulation']},
+  ],
+};
+
+const TCONTENT={
+  'Phonetics':`<h3>WHAT IS PHONETICS?</h3><p>Phonetics is the branch of Linguistics that studies speech sounds — how they are produced, transmitted, and perceived.</p><h3>TYPES OF PHONETICS</h3><ul><li><b>Articulatory Phonetics</b> — Studies how speech sounds are produced by the human vocal organs. Example: movement of tongue, lips, vocal cords.</li><li><b>Acoustic Phonetics</b> — Studies sound waves (frequency, amplitude, pitch).</li><li><b>Auditory Phonetics</b> — Studies how humans hear and interpret sounds.</li></ul><h3>ORGANS OF SPEECH</h3><ul><li>Lungs (air supply), Vocal cords (voice production), Tongue (main articulator)</li><li>Teeth, Lips, Palate (hard & soft), Nose (nasal sounds)</li></ul><h3>VOWELS & CONSONANTS</h3><ul><li>Vowels: /a/ /e/ /i/ /o/ /u/ — short, long, diphthongs</li><li>Consonants: classified by place (bilabial, dental, velar), manner (plosive, fricative, nasal), voicing (voiced/voiceless)</li></ul><h3>PHONEME</h3><p>The smallest unit of sound that can change meaning. Example: "bat" vs "pat" — /b/ and /p/ are different phonemes.</p><a class="vlink" href="https://youtu.be/LWaVONYR_yw?si=oZ8I9RE5EDL7a4rt" target="_blank">▶ Watch Reference Video</a>`,
+  'Group Discussions':`<h3>INTRODUCTION</h3><p>Today, I would like to share my views on this topic, which is very relevant in our current society. It has both positive and negative aspects that need to be carefully analyzed.</p><h3>STRUCTURE OF A GD</h3><ul><li><b>Main Idea:</b> This topic plays an important role in daily lives and directly impacts individuals and society.</li><li><b>Advantages:</b> Improving efficiency, creating opportunities, and making life more convenient.</li><li><b>Disadvantages:</b> Possible misuse, overdependence, and negative effects on certain groups.</li><li><b>Real-Life Examples:</b> Observe influence in education, technology, and communication.</li><li><b>Opinion:</b> The key lies in using it wisely and maintaining a balance.</li><li><b>Conclusion:</b> Requires awareness, proper understanding, and responsible usage for a better future.</li></ul>`,
+  'Self Introduction':`<h3>STRUCTURE</h3><ul><li><b>1. Greeting + Name:</b> Start with a polite greeting and state your full name confidently.</li><li><b>2. Current Status:</b> Mention what you are currently doing — course, year, college.</li><li><b>3. Educational Background:</b> Briefly highlight important academic achievements.</li><li><b>4. Strengths:</b> Mention 2–3 relevant qualities like communication, leadership, quick learning.</li><li><b>5. Skills:</b> Technical skills, languages, or tools you know.</li><li><b>6. Achievements:</b> Briefly mention meaningful achievements if any.</li><li><b>7. Goals:</b> Clearly state your career goal.</li><li><b>8. Closing:</b> Thank the listener politely.</li></ul><h3>IMPORTANT TIPS</h3><ul><li>Keep it within 30–60 seconds</li><li>Speak clearly and confidently</li><li>Avoid memorizing word-for-word</li><li>Maintain eye contact with a smile</li></ul>`,
+  'Body Language & Confidence Building':`<h3>BODY LANGUAGE</h3><ul><li>Maintain a straight posture; keep shoulders relaxed</li><li>Make natural eye contact — shows confidence</li><li>Use simple hand gestures to support your points</li><li>Keep a pleasant facial expression with a slight smile</li><li>Avoid fidgeting, crossing arms, or shifting too much</li></ul><h3>CONFIDENCE BUILDING</h3><ul><li>Speak clearly at a moderate pace</li><li>Prepare your points in advance — don't over-memorize</li><li>Practice speaking in front of a mirror or with friends</li><li>Take a deep breath before you start</li><li>The more you practice, the more confidence grows naturally</li></ul><a class="vlink" href="https://youtu.be/IBw68WbZ-u0?si=f1MwkxWw9FsIQ8-K" target="_blank">▶ Watch Reference Video</a>`,
+  'Computer Fundamentals':`<h3>INTRODUCTION</h3><p>Computer Fundamentals refer to the basic concepts and components of a computer system. A computer is an electronic device that processes data and converts it into meaningful information.</p><h3>BASIC COMPONENTS</h3><ul><li>Hardware: keyboard, mouse, monitor, CPU</li><li>Software: programs and applications that run on the computer</li></ul><h3>CPU</h3><p>The CPU is the brain of the computer — includes ALU and Control Unit.</p><h3>MEMORY & STORAGE</h3><ul><li>Primary: RAM (volatile) and ROM (non-volatile)</li><li>Secondary: HDD, SSD, Pen Drives</li></ul><h3>APPLICATIONS</h3><p>Education, banking, healthcare, business, and communication.</p><a class="ilink" href="https://1.bp.blogspot.com/-Vb8NI3nE7AU/XpQW6-Oj5DI/AAAAAAAAAc0/5CtbDPCyxmA-atH-k6aSbh7cnfkV5fTawCLcBGAsYHQ/s1600/Components%2Bof%2BComputer%2B%2528Computer%2BParts%2529%2B-%2Bwww.tutorialsmate.com.png" target="_blank">View Component Diagram</a>`,
+  'Operating Systems':`<h3>INTRODUCTION</h3><p>An Operating System (OS) is system software acting as interface between user and hardware, managing all resources and enabling smooth functioning.</p><h3>FUNCTIONS</h3><ul><li>Process management, Memory management, File system management</li><li>Device management, Security and protection, I/O operations</li></ul><h3>TYPES</h3><ul><li>Batch OS, Time-sharing OS, Real-time OS</li><li>Distributed OS, Mobile OS (Android, iOS)</li></ul><h3>EXAMPLES</h3><p>Microsoft Windows, Linux, macOS, Android, iOS.</p>`,
+  'MS Word':`<h3>INTRODUCTION</h3><p>Microsoft Word is a widely used word processing application for creating, editing, formatting, and printing documents efficiently.</p><h3>KEY FEATURES</h3><ul><li>Text formatting: fonts, size, color, alignment</li><li>Spell check, grammar check, find and replace</li><li>Insert images, tables, charts, symbols</li><li>Page layout: margins, orientation, page numbers</li></ul><h3>APPLICATIONS</h3><p>Writing letters, reports, resumes, projects, and official documents.</p>`,
+  'MS Excel':`<h3>INTRODUCTION</h3><p>Microsoft Excel is a powerful spreadsheet application for data entry, calculation, analysis, and visualization.</p><h3>KEY FEATURES</h3><ul><li>Formulas & functions: SUM, AVERAGE, COUNT, IF, VLOOKUP</li><li>Charts and graphs for data visualization</li><li>Sorting, filtering, and pivot tables</li><li>Conditional formatting and data validation</li></ul><h3>APPLICATIONS</h3><p>Budgeting, accounting, data analysis, report generation, maintaining records.</p>`,
+  'MS PowerPoint':`<h3>INTRODUCTION</h3><p>Microsoft PowerPoint is a presentation application for creating visual slides, widely used in education, business, and seminars.</p><h3>KEY FEATURES</h3><ul><li>Slide creation with themes, layouts, and templates</li><li>Animations and transitions</li><li>Insert images, videos, charts, audio</li><li>Speaker notes and presentation mode</li></ul><h3>APPLICATIONS</h3><p>Classroom teaching, business meetings, project presentations, training sessions.</p>`,
+  'Internet & Networking Basics':`<h3>INTRODUCTION</h3><p>A network is a collection of interconnected computers. The Internet is a global network connecting millions of such networks.</p><h3>TYPES OF NETWORKS</h3><ul><li>LAN (Local Area Network) — within a building</li><li>MAN (Metropolitan Area Network) — city-wide</li><li>WAN (Wide Area Network) — global coverage</li></ul><h3>HOW INTERNET WORKS</h3><p>Uses TCP/IP protocols. Each device has a unique IP address. Data travels in packets.</p><h3>INTERNET SERVICES</h3><p>Web browsing, Email, FTP, Cloud Services, VoIP, Online Communication.</p>`,
+  'Basics of C Programming':`<h3>INTRODUCTION</h3><p>C is a general-purpose procedural programming language developed by Dennis Ritchie. Efficient, flexible, close to hardware.</p><h3>STRUCTURE OF C PROGRAM</h3><pre>#include &lt;stdio.h&gt;
+int main() {
+    // Your code here
+    printf("Hello, Andhra University!\\n");
+    return 0;
+}</pre><h3>KEY CONCEPTS</h3><ul><li>Data Types: int, float, char, double</li><li>Variables and Constants</li><li>Operators: arithmetic, relational, logical, bitwise</li><li>Control: if/else, switch, for, while, do-while</li><li>Functions, Pointers, Arrays, Structures</li><li>Memory Management: malloc, calloc, free</li></ul>`,
+  'C Practice Questions':`<h3>PRACTICE QUESTIONS WITH ALGORITHMS</h3><h3>1. Add Two Numbers</h3><p><b>Algorithm:</b> Start → Declare a, b, sum → Read a and b → sum = a + b → Display sum → Stop</p><pre>#include &lt;stdio.h&gt;
+int main(){
+    int a,b,sum;
+    scanf("%d %d",&a,&b);
+    sum=a+b;
+    printf("Sum = %d",sum);
+    return 0;
+}</pre><h3>2. Check Even or Odd</h3><pre>int main(){
+    int n; scanf("%d",&n);
+    printf(n%2==0?"Even":"Odd");
+    return 0;
+}</pre><h3>3. Fibonacci Series</h3><pre>int a=0,b=1,c,n;
+scanf("%d",&n);
+for(int i=0;i&lt;n;i++){
+    printf("%d ",a);
+    c=a+b; a=b; b=c;
+}</pre><h3>4. Check Prime</h3><pre>int n,flag=1;
+scanf("%d",&n);
+for(int i=2;i&lt;=n/2;i++)
+    if(n%i==0){flag=0;break;}
+printf(flag?"Prime":"Not Prime");</pre>`,
+  'Newton\'s Rings':`<h3>AIM</h3><p>To determine the wavelength of monochromatic light using Newton's rings.</p><h3>APPARATUS</h3><p>Plano-convex lens, glass plate, sodium lamp (monochromatic light source), travelling microscope.</p><img class="img-box" src="https://tse4.mm.bing.net/th/id/OIP.dfL4eWY0t4B456xoEfKg6QHaHa?pid=Api&P=0&h=180" alt="Newton's Rings Apparatus"/><h3>PROCEDURE</h3><ul><li>Clean the plano-convex lens and glass plate; place lens on plate to form thin air film</li><li>Arrange sodium lamp so light falls normally on the lens</li><li>Adjust microscope to clearly observe concentric circular rings</li><li>Measure diameters of several dark rings using the travelling microscope</li><li>Record readings for different ring numbers; repeat to minimize errors</li></ul><h3>FORMULA</h3><p>λ = D²ₙ / (4nR), where D = ring diameter, n = ring number, R = radius of curvature</p><h3>RESULT</h3><p>The wavelength of the given monochromatic light is determined from the Dₙ² vs n graph.</p><h3>PRECAUTIONS</h3><ul><li>Ensure lens and glass plate are clean</li><li>Avoid parallax error while taking readings</li><li>Take measurements carefully for accurate results</li></ul><a class="vlink" href="https://youtu.be/eh6BxkKmB-E?si=bWw0KeNWqs5MvvHf" target="_blank">▶ Watch Reference Video</a>`,
+  'Diffraction Grating':`<h3>AIM</h3><p>To determine the wavelength of monochromatic light using a plane transmission diffraction grating.</p><h3>APPARATUS</h3><p>Diffraction grating, spectrometer, sodium lamp, collimator, telescope, prism table.</p><img class="img-box" src="https://tse3.mm.bing.net/th/id/OIP.lbDx-KCq6KBRP96zLikikwHaFl?pid=Api&P=0&h=180" alt="Diffraction Grating Setup"/><h3>THEORY</h3><p>A diffraction grating has many equally spaced parallel lines. Condition for maxima: (a+b)sinθ = nλ</p><h3>PROCEDURE</h3><ul><li>Set up spectrometer; adjust collimator for parallel rays</li><li>Place grating on prism table; light falls normally</li><li>Align telescope with collimator for central maximum</li><li>Rotate telescope to observe diffracted lines on both sides</li><li>Note angular positions for different orders</li></ul><h3>RESULT</h3><p>Wavelength of monochromatic light is determined from diffraction angles.</p><a class="vlink" href="https://youtu.be/p8cyO76gxZI?si=ubjBPIkG8nclkLhb" target="_blank">▶ Watch Reference Video</a>`,
+  'Wedge Method':`<h3>AIM</h3><p>To determine the thickness of a thin wire using interference fringes by the wedge method.</p><h3>APPARATUS</h3><p>Glass plates, thin wire, sodium lamp, travelling microscope.</p><img class="img-box" src="https://tse4.mm.bing.net/th/id/OIP.EjrIoKQPsl17VPAcOVR9VwHaF-?pid=Api&P=0&h=180" alt="Wedge Method Setup"/><h3>PROCEDURE</h3><ul><li>Place thin wire between two glass plates to form wedge-shaped air film</li><li>Illuminate with sodium light; observe parallel interference fringes</li><li>Measure fringe width using travelling microscope</li><li>Note distance between fringes and length of wedge</li></ul><h3>FORMULA</h3><p>t = λL / 2β, where L = length of plates, β = fringe width, λ = wavelength</p><a class="vlink" href="https://youtu.be/XuXUtGN928U?si=5AIpeos_y7U9D7RG" target="_blank">▶ Watch Reference Video</a>`,
+  'Cauchy\'s Constant':`<h3>AIM</h3><p>To determine Cauchy's constants of a prism material.</p><h3>APPARATUS</h3><p>Spectrometer, prism, mercury lamp, collimator, telescope, prism table.</p><img class="img-box" src="https://tse3.mm.bing.net/th/id/OIP.HaDp6iaA21vhSBV2yIwcoAHaHa?pid=Api&P=0&h=180" alt="Cauchy's Constant Setup"/><h3>THEORY</h3><p>Cauchy's formula: μ = A + B/λ², where A and B are Cauchy's constants and λ is wavelength.</p><h3>PROCEDURE</h3><ul><li>Set up spectrometer; place prism on prism table</li><li>Measure angle of minimum deviation for each wavelength of mercury spectrum</li><li>Calculate refractive index for each wavelength</li><li>Plot graph of μ vs 1/λ² to find constants A and B</li></ul><a class="vlink" href="https://youtu.be/9v82ueaOHoc?si=Ug9KlofPhixoMjYm" target="_blank">▶ Watch Reference Video</a>`,
+  'Double Refraction':`<h3>AIM</h3><p>To study double refraction in a crystal and determine refractive indices of ordinary and extraordinary rays.</p><h3>APPARATUS</h3><p>Calcite crystal, spectrometer, sodium lamp, collimator, telescope.</p><img class="img-box" src="https://tse4.mm.bing.net/th/id/OIP.4NLDlXfJXrtXPUUct_og9QHaDX?pid=Api&P=0&h=180" alt="Double Refraction Setup"/><h3>THEORY</h3><p>A ray passing through certain crystals splits into ordinary ray (obeys Snell's law) and extraordinary ray (doesn't obey Snell's law).</p><h3>PROCEDURE</h3><ul><li>Place calcite crystal on spectrometer prism table</li><li>Observe splitting of light into two images through telescope</li><li>Measure angular positions of both rays separately</li><li>Calculate refractive indices using appropriate formulas</li></ul><a class="vlink" href="https://youtu.be/iRwagObFrPM?si=wiyfVqllRgVB1GSK" target="_blank">▶ Watch Reference Video</a>`,
+  'Linux Commands & Guide':`<h3>INTRODUCTION</h3><p>Linux is an open-source OS widely used for servers, development, and system administration. It uses a command-line interface (CLI).</p><h3>BASIC NAVIGATION</h3><pre>$ ls -la          # List all files with details
+$ pwd             # Print working directory
+$ cd /home/user   # Change directory
+$ cd ..           # Go up one level</pre><h3>FILE MANAGEMENT</h3><pre>$ touch file.txt  # Create a file
+$ cp file1 file2  # Copy file
+$ mv file1 file2  # Move/rename file
+$ rm file.txt     # Delete file
+$ mkdir mydir     # Create directory
+$ rmdir mydir     # Remove empty directory</pre><h3>VIEW & EDIT</h3><pre>$ cat file.txt    # Display file content
+$ less file.txt   # Page-by-page view
+$ nano file.txt   # Simple text editor
+$ vi file.txt     # Advanced editor</pre><h3>SYSTEM & PROCESS</h3><pre>$ ps aux          # List running processes
+$ top             # Monitor system live
+$ kill -9 PID     # Terminate a process
+$ df -h           # Disk space usage
+$ free -m         # Memory usage
+$ ifconfig        # Network information
+$ ping google.com # Test connectivity
+$ sudo apt update # Update packages</pre><h3>PERMISSIONS</h3><pre>$ chmod 755 file  # Change permissions
+$ chown user file # Change ownership</pre>`,
+  'DSA Practice Questions':`<h3>DSA PRACTICE QUESTIONS WITH ALGORITHMS</h3><h3>1. Linear Search</h3><p><b>Algorithm:</b> Start → Read array and search element → Compare element with each item one by one → If match found display position → Else display "Not Found" → Stop</p><h3>2. Binary Search</h3><p><b>Algorithm:</b> Start → Read sorted array → Set low=0, high=n-1 → Find mid=(low+high)/2 → Compare target with middle element → If equal display position; if smaller search left half; if greater search right half → Repeat until found → Stop</p><h3>3. Bubble Sort</h3><p><b>Algorithm:</b> Start → Read array → Compare adjacent elements → Swap if in wrong order → Repeat for all elements until sorted → Display sorted array → Stop</p><h3>4. Stack (Push & Pop)</h3><p><b>Algorithm:</b> Initialize stack and top=-1 → Push: check overflow; add element; increment top → Pop: check underflow; remove element; decrement top → Display stack → Stop</p><h3>5. Queue (Enqueue & Dequeue)</h3><p><b>Algorithm:</b> Initialize queue with front and rear → Enqueue: add element at rear; check overflow → Dequeue: remove from front; check underflow → Display queue → Stop</p>`,
+};
+
+const DSA_SUBTOPICS={
+  'Introduction':'Introduction: Data Structures and Algorithms (DSA) is a fundamental concept in computer science that focuses on organizing, storing, and processing data efficiently. It helps in solving problems effectively and is essential for writing optimized programs.',
+  'Data Structures':'Data Structures: Data structures are ways of organizing data so that it can be accessed and modified efficiently. Broadly classified into linear (arrays, linked lists, stacks, queues) and non-linear (trees, graphs).',
+  'Algorithms':'Algorithms: An algorithm is a step-by-step procedure to solve a problem or perform a task. Good algorithms are efficient in terms of time and space complexity. Properties: Input, Output, Definiteness, Finiteness, Effectiveness.',
+  'Types of Data Structures':'Types: Linear structures store data sequentially (arrays, linked lists, stacks, queues). Non-linear structures store data hierarchically or in network form (trees, graphs, heaps). Each type is used based on the requirement of the problem.',
+  'Operations on Data Structures':'Operations: Common operations include Insertion (adding data), Deletion (removing data), Traversal (visiting all elements), Searching (finding specific data), and Sorting (arranging data in order).',
+  'Time and Space Complexity':'Complexity: Time complexity measures the time taken to execute an algorithm. Space complexity measures memory usage. Big O notation: O(1) constant, O(log n) logarithmic, O(n) linear, O(n²) quadratic. Used to compare algorithm efficiency.',
+  'Searching and Sorting Algorithms':'Searching: Linear Search O(n) — checks each element. Binary Search O(log n) — requires sorted data. Sorting: Bubble Sort O(n²), Selection Sort O(n²), Insertion Sort O(n²), Merge Sort O(n log n), Quick Sort O(n log n) average.',
+  'Applications':'Applications: DSA is used in database management (indexing), operating systems (scheduling), artificial intelligence (graphs, trees), web development (caching), and many real-world applications like GPS, social networks, and search engines.',
+  'Advantages':'Advantages: DSA improves efficiency, reduces execution time, optimizes memory usage, helps in solving complex problems effectively, and is essential for technical interviews at top companies.',
+  'Conclusion':'Conclusion: Overall, DSA basics provide a strong foundation for programming and are essential for developing efficient and scalable software solutions. Mastering DSA significantly improves problem-solving skills and is crucial for placements.'
+};
+
+const COURSES={
+  cse:[
+    {ic:'🎓',n:'NPTEL Portal',u:'https://nptel.ac.in/',d:'IIT & IISc courses — free certification, government recognized'},
+    {ic:'💼',n:'TCS iON Digital Portal',u:'https://www4.tcsion.com/dotcom/TCSSMB/Login/login.html',d:'Industry certifications by TCS — widely accepted by recruiters'},
+    {ic:'📊',n:"Striver's DSA Sheet",u:'https://takeuforward.org/',d:'Best DSA roadmap for placements — 450+ curated problems'},
+    {ic:'🌐',n:'Future Skills Prime',u:'https://www.udemy.com/course/future-skills/',d:'Government-backed upskilling for emerging tech skills'},
+  ],
+  ece:[
+    {ic:'🎓',n:'Coursera for ECE',u:'https://geetha.org.in/best-free-online-learning-platforms-for-students-2026-complete-guide/',d:'Top ECE courses from world-class universities'},
+    {ic:'📚',n:'SWAYAM Portal',u:'https://www.classcentral.com/report/swayam-moocs-course-list/',d:'India\'s own MOOC platform — credit-linked courses'},
+    {ic:'🌐',n:'edX for ECE',u:'https://geetha.org.in/best-free-online-learning-platforms-for-students-2026-complete-guide/',d:'Professional certificate programs in electronics'},
+    {ic:'🔬',n:'MIT OpenCourseWare',u:'https://www.niser.ac.in/library/content/e-learning-portals',d:'Free MIT course materials — signals, circuits, communication'},
+  ],
+  ee:[
+    {ic:'📐',n:'MATLAB Academy',u:'https://matlabacademy.mathworks.com/',d:'Official MATLAB training for simulations and engineering'},
+    {ic:'💻',n:'Udemy EE Courses',u:'https://www.udemy.com/',d:'Power systems, PLC, control systems courses'},
+    {ic:'🎓',n:'NPTEL Portal',u:'https://nptel.ac.in/',d:'IIT & IISc courses for electrical engineering'},
+    {ic:'📚',n:'SWAYAM Portal',u:'https://www.classcentral.com/report/swayam-moocs-course-list/',d:'Government MOOC platform with EE credit courses'},
+  ],
+  mechanical:[
+    {ic:'🔧',n:'Alison Mechanical',u:'https://alison.com/tag/mechanical-engineering',d:'Free mechanical engineering courses — beginner to advanced'},
+    {ic:'🎓',n:'Coursera Mechanical',u:'https://geetha.org.in/best-free-online-learning-platforms-for-students-2026-complete-guide/',d:'Mechanical courses from top universities'},
+    {ic:'⚙️',n:'GaugeHow Portal',u:'https://gaugehow.com/mechanical-engineering/mechanical-engineering-courses-online',d:'Practical mechanical engineering online courses'},
+    {ic:'📱',n:'Cursa Mechanical',u:'https://cursa.app/free-courses-mechanical-online',d:'Free online mechanical courses on mobile-friendly platform'},
+  ],
+  chemical:[
+    {ic:'🧪',n:'ChemEngStudent',u:'https://www.chemengstudent.com',d:'Dedicated chemical engineering study resources'},
+    {ic:'🌐',n:'edX Chemical Eng',u:'https://www.edx.org/learn/chemical-engineering',d:'Professional courses in chemical engineering'},
+    {ic:'🔬',n:'Alison Chemical Eng',u:'https://alison.com/tag/chemical-engineering',d:'Free chemical engineering fundamentals courses'},
+    {ic:'🏛️',n:'MIT Open Learning',u:'https://learn.mit.edu/c/department/chemical-engineering',d:'MIT chemical engineering open courseware'},
+  ],
+  civil:[
+    {ic:'🏗️',n:'CivilEra',u:'https://www.civilera.com/civil-engineering-online-training',d:'Civil engineering online training portal'},
+    {ic:'⚒️',n:'SMEClabs Civil',u:'https://www.smeclabs.net/course/civil-courses/',d:'Professional civil engineering skill courses'},
+    {ic:'🌐',n:'Alison Civil Eng',u:'https://alison.com/tag/civil-engineerin',d:'Free civil engineering fundamentals'},
+    {ic:'🎓',n:'edX Civil Eng',u:'https://www.edx.org/learn/civil-engineering',d:'University-level civil engineering courses'},
+  ],
+};
+
+const ROADMAPS={
+  cse:{title:'CSE Career Roadmap',paths:[['Learn C/Java/Python','Master DSA','Build Projects','Competitive Coding','Internship','SDE at Top Company'],['Python','Statistics & ML','Kaggle Projects','Research Paper','Data Science Role'],['Web Dev (React/Node)','Deploy on Cloud','Portfolio','Full Stack Developer']]},
+  ece:{title:'ECE Career Roadmap',paths:[['Embedded C','VLSI Basics','FPGA Projects','Core ECE Job'],['Python/MATLAB','Signal Processing','DSP Engineer'],['PCB Design','IoT Projects','Hardware Startup']]},
+  ee:{title:'EE Career Roadmap',paths:[['Power Systems','MATLAB Simulation','GATE Exam','PSU/NTPC/BHEL'],['PLC/SCADA','Industrial Automation','Automation Engineer'],['Renewable Energy','Solar/Wind Projects','Energy Sector']]},
+  civil:{title:'Civil Career Roadmap',paths:[['AutoCAD','Structural Design','Site Internship','Construction Company'],['GIS/Remote Sensing','Urban Planning','Government Jobs'],['GATE Civil','M.Tech/PSUs','Research']]},
+  mechanical:{title:'Mechanical Career Roadmap',paths:[['CAD/SolidWorks','Manufacturing Intern','Core Mech Job'],['CFD/ANSYS/FEA','Automotive R&D'],['GATE Mech','M.Tech/PSUs']]},
+  chemical:{title:'Chemical Engineering Career Roadmap',paths:[['Process Simulation','ASPEN Plus','Chemical Plant Internship','Process Engineer'],['Quality Control','Pharma Industry','R&D Scientist'],['GATE Chemical','M.Tech/PSUs','Academia']]},
+};
+
+let lType='user', curLab=null, curLabKey=null, admDiff='easy', postedEvents=[], postedQs=[];
+let recSel={branch:'',goal:''};
+
+function showLogin(t){
+  lType=t;
+  ['scLogin','scDash','scAdmin'].forEach(s=>document.getElementById(s).classList.remove('on'));
+  document.getElementById('scLogin').classList.add('on');
+  document.getElementById('lIcon').textContent=t==='admin'?'⚙️':'🎓';
+  document.getElementById('lTitle').textContent=t==='admin'?'ADMIN LOGIN':'STUDENT LOGIN';
+  document.getElementById('lSub').textContent=t==='admin'?'Admin access only':'Enter credentials to access UniPortal AU';
+  document.getElementById('regIn').value='';
+  document.getElementById('pwIn').value='';
+  document.getElementById('lErr').style.display='none';
+}
+
+function doLogin(){
+  const r=document.getElementById('regIn').value.trim();
+  const p=document.getElementById('pwIn').value.trim();
+  document.getElementById('lErr').style.display='none';
+  if(lType==='admin'){
+    if(r==='325106410030'&&p==='au@5487'){
+      document.getElementById('scLogin').classList.remove('on');
+      document.getElementById('scAdmin').classList.add('on');
+    }else document.getElementById('lErr').style.display='block';
+  }else{
+    if(r==='325106410001'&&p==='au@123'){
+      document.getElementById('scLogin').classList.remove('on');
+      document.getElementById('scDash').classList.add('on');
+      document.getElementById('sideName').textContent='AU Student';
+      document.getElementById('sideReg').textContent=r;
+      document.querySelectorAll('.sel').forEach(s=>s.style.display='block');
+      renderLabs();renderCourses();renderRoadmap();
+    }else document.getElementById('lErr').style.display='block';
+  }
+}
+
+function logout(){
+  ['scLogin','scDash','scAdmin'].forEach(s=>document.getElementById(s).classList.remove('on'));
+  document.getElementById('scLogin').classList.add('on');
+  document.querySelectorAll('.sel').forEach(s=>s.style.display='none');
+  lType='user';
+  document.getElementById('lIcon').textContent='🎓';
+  document.getElementById('lTitle').textContent='STUDENT LOGIN';
+  document.getElementById('lSub').textContent='Enter credentials to access UniPortal AU';
+}
+
+function goPage(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nv').forEach(n=>n.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('nv-'+id).classList.add('on');
+}
+
+function onSelChange(){renderLabs();renderCourses();renderRoadmap();}
+
+function renderLabs(){
+  const yr=document.getElementById('yrSel').value;
+  const dept=document.getElementById('deptSel').value;
+  curLabKey=yr+'_'+dept;
+  const labs=LABS[curLabKey]||[];
+  document.getElementById('labsSubLabel').textContent=yr+({1:'st',2:'nd',3:'rd'}[yr]||'th')+' Year '+dept.toUpperCase()+' — '+labs.length+' Labs';
+  document.getElementById('labsGrid').innerHTML=labs.map((l,i)=>`<div class="card" onclick="openLab(${i})"><div class="c-ic">${l.ic}</div><div class="c-tt">${l.n}</div><div class="c-ds">${l.t.length} topics available</div><span class="badge bg-b">${l.t.length} Topics</span></div>`).join('');
+  backToLabs();
+}
+
+function openLab(i){
+  curLab=i;
+  const lab=LABS[curLabKey][i];
+  document.getElementById('labsView').style.display='none';
+  document.getElementById('labTopicsView').style.display='block';
+  document.getElementById('subTopicsView').style.display='none';
+  document.getElementById('topicContentView').style.display='none';
+  document.getElementById('ltTitle').textContent=lab.ic+' '+lab.n;
+  document.getElementById('topicList').innerHTML=lab.t.map(t=>`<div class="titem" onclick="openTopic('${t.replace(/'/g,"\\'")}')"><span class="ti-name">${t}</span><span class="ti-arr">→</span></div>`).join('');
+}
+
+function openTopic(t){
+  const lab=LABS[curLabKey][curLab];
+  if(lab.hasSub&&lab.hasSub[t]){
+    document.getElementById('labTopicsView').style.display='none';
+    document.getElementById('subTopicsView').style.display='block';
+    document.getElementById('stTitle').textContent=t;
+    const subs=lab.hasSub[t];
+    document.getElementById('stSubList').innerHTML=subs.map(s=>`<div class="stitem" onclick="showSubTopic('${s.replace(/'/g,"\\'")}')">${s}</div>`).join('');
+    document.getElementById('stContent').innerHTML='<p style="color:var(--text2)">Select a sub-topic above to view its content.</p>';
+  }else{
+    document.getElementById('labTopicsView').style.display='none';
+    document.getElementById('topicContentView').style.display='block';
+    document.getElementById('tcTitle').textContent=t;
+    document.getElementById('tcContent').innerHTML=TCONTENT[t]||`<h3>${t}</h3><p style="color:var(--text2)">This topic covers key concepts in ${t}. Refer to your lab manual and NPTEL for detailed resources. Practical sessions focus on hands-on application of theoretical knowledge.</p>`;
+  }
+}
+
+function showSubTopic(s){
+  document.querySelectorAll('.stitem').forEach(el=>el.classList.remove('on'));
+  event.target.classList.add('on');
+  document.getElementById('stContent').innerHTML=`<h3>${s.toUpperCase()}</h3><p style="color:var(--text2)">${DSA_SUBTOPICS[s]||'Content for this sub-topic will be available soon.'}</p>`;
+}
+
+function backToLabs(){
+  document.getElementById('labsView').style.display='block';
+  document.getElementById('labTopicsView').style.display='none';
+  document.getElementById('subTopicsView').style.display='none';
+  document.getElementById('topicContentView').style.display='none';
+}
+
+function backToTopics(){
+  document.getElementById('labTopicsView').style.display='block';
+  document.getElementById('subTopicsView').style.display='none';
+  document.getElementById('topicContentView').style.display='none';
+}
+
+function renderCourses(){
+  const dept=document.getElementById('deptSel').value;
+  const cs=COURSES[dept]||COURSES.cse;
+  document.getElementById('courseSubLabel').textContent='Top learning portals for '+dept.toUpperCase()+' students';
+  document.getElementById('courseLinks').innerHTML=cs.map(c=>`<a class="plink" href="${c.u}" target="_blank"><div class="p-ic">${c.ic}</div><div><div class="p-nm">${c.n}</div><div class="p-url">${c.u.replace('https://','').split('/')[0]}</div><div class="p-ds">${c.d}</div></div><span style="margin-left:auto;color:var(--accent);font-size:18px;">→</span></a>`).join('');
+}
+
+function renderRoadmap(){
+  const dept=document.getElementById('deptSel').value;
+  const rm=ROADMAPS[dept];
+  const pathLabels=['🔵 Technical Path','🟢 Specialisation Path','🟠 Higher Studies Path'];
+  document.getElementById('roadmapContent').innerHTML=`
+    <div class="rmcard">
+      <div class="rm-title">🗺️ ${rm.title}</div>
+      <p style="color:var(--text2);font-size:14px;margin-bottom:20px;">Follow one or more paths below based on your goal — job, research, or higher studies.</p>
+      ${rm.paths.map((p,pi)=>`
+        <div style="margin-bottom:24px;">
+          <div style="font-size:12px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:10px;">${pathLabels[pi]||'Path '+(pi+1)}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            ${p.map((s,i)=>`
+              <div style="display:flex;align-items:center;gap:12px;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;">
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">${i+1}</div>
+                <div style="font-size:14px;font-weight:600;color:var(--text);">${s}</div>
+              </div>
+              ${i<p.length-1?'<div style="padding-left:18px;color:var(--accent2);font-size:16px;line-height:1;">↓</div>':''}
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+      <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:16px;color:var(--text2);font-size:14px;line-height:1.7;margin-top:4px;">
+        💡 <strong style="color:var(--accent);">Pro Tip:</strong> Build strong fundamentals, create practical projects, and stay consistent. Target internships by 3rd year. Aim for 2–3 GitHub projects and relevant certifications before placements.
+      </div>
+    </div>`;
+}
+
+function admTab(id){
+  document.querySelectorAll('.atab').forEach((t,i)=>t.classList.toggle('on',['evtForm','qForm'][i]===id));
+  document.querySelectorAll('.aform').forEach(f=>f.classList.toggle('on',f.id===id));
+}
+
+function setDiff(d,el){
+  admDiff=d;
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function postEvent(){
+  const title=document.getElementById('evtTitle').value.trim();
+  if(!title)return;
+  const evt={title,desc:document.getElementById('evtDesc').value,link:document.getElementById('evtLink').value,img:document.getElementById('evtImg').value,date:document.getElementById('evtDate').value};
+  postedEvents.push(evt);
+  ['evtTitle','evtDesc','evtLink','evtImg','evtDate'].forEach(id=>document.getElementById(id).value='');
+  renderPostedEvents();
+}
+
+function renderPostedEvents(){
+  const html=postedEvents.map(e=>`<div class="posted-item"><div class="pi-title">${e.title}</div><div class="pi-meta">${e.desc}${e.date?' · '+e.date:''}</div>${e.link?`<div class="pi-link"><a href="${e.link}" target="_blank">${e.link}</a></div>`:''}</div>`).join('');
+  document.getElementById('evtPosted').innerHTML=html;
+  document.getElementById('adminEventsFeed').innerHTML=postedEvents.length?`<div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px;">Admin Posted Events:</div>`+html:'';
+}
+
+function postQ(){
+  const q=document.getElementById('qText').value.trim();
+  if(!q)return;
+  const obj={lab:document.getElementById('qLab').value,q,algo:document.getElementById('qAlgo').value,diff:admDiff};
+  postedQs.push(obj);
+  ['qLab','qText','qAlgo'].forEach(id=>document.getElementById(id).value='');
+  const dc={'easy':'background:rgba(16,185,129,.12);color:var(--green)','medium':'background:rgba(245,158,11,.12);color:var(--gold)','hard':'background:rgba(239,68,68,.12);color:var(--red)'};
+  document.getElementById('qPosted').innerHTML=postedQs.map(q=>`<div class="posted-item"><span class="diff-badge" style="${dc[q.diff]}">${q.diff.toUpperCase()}</span> <b>${q.lab}</b><div class="pi-meta" style="margin-top:6px;">${q.q}</div>${q.algo?`<div style="color:var(--text2);font-size:12px;margin-top:4px;">Algorithm: ${q.algo}</div>`:''}</div>`).join('');
+}
+
+function setRec(type,val){
+  recSel[type]=val;
+  document.querySelectorAll(`#rec${type.charAt(0).toUpperCase()+type.slice(1)} .rec-btn`).forEach(b=>b.classList.toggle('on',b.textContent===val));
+  if(recSel.branch&&recSel.goal) showRec();
+}
+
+function showRec(){
+  const recs={
+    'CSE_Job':'Skill Development Centre (Python, Cloud), Cyber Labs, NPTEL Certifications, Striver\'s DSA Sheet, TCS iON Certifications',
+    'CSE_Research':'Research & Advanced Programs, Library Resources (IEEE Xplore), Cyber Labs, International Programs',
+    'CSE_Startup':'Skill Development Centre, Student Engagement Programs (IEEE/ACM), International Programs, Distance Learning',
+    'ECE_Job':'Skill Development Centre (MATLAB, Embedded), NPTEL/SWAYAM Certifications, MIT OpenCourseWare',
+    'ECE_Research':'Research Programs (DRDO/ISRO), Library (Scopus/IEEE), International Collaborations',
+    'ECE_Startup':'IoT Labs, Student Engagement (IEEE Chapter), Skill Development Centre',
+    'EE_Job':'Skill Development Centre (MATLAB/PLC), SWAYAM Certifications, NPTEL for EE',
+    'EE_Research':'Research Programs, Library Resources, GATE preparation for PSUs',
+    'EE_Startup':'Power Electronics projects, International Programs, Skill Development Centre',
+  };
+  const key=`${recSel.branch}_${recSel.goal}`;
+  const rec=recs[key]||`For ${recSel.branch} students aiming for ${recSel.goal}: Focus on Skill Development Centre, NPTEL Certifications, Library Resources, and Student Engagement Programs at AU.`;
+  const el=document.getElementById('recOut');
+  el.style.display='block';
+  el.innerHTML=`<b style="color:var(--accent)">Recommended for ${recSel.branch} → ${recSel.goal}:</b><br>${rec}`;
+}
+</script>
