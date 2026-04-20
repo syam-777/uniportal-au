@@ -185,9 +185,25 @@ body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;fo
 .f-logo{font-family:'Orbitron',monospace;font-size:15px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
 .f-quote{color:var(--text2);font-size:13px;font-style:italic;margin-bottom:8px;}
 .f-copy{color:var(--text3);font-size:11px;}
+  /* SPLASH SCREEN */
+#splash{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#070b14;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;}
+#splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;letter-spacing:4px;}
+.splash-sub{font-family:'Rajdhani',sans-serif;font-size:16px;color:#94a3b8;letter-spacing:6px;margin-bottom:40px;}
+.splash-img{width:120px;height:120px;border-radius:24px;margin-bottom:28px;box-shadow:0 0 60px rgba(0,212,255,0.3);}
+.splash-bar{width:200px;height:3px;background:#1a2540;border-radius:10px;overflow:hidden;}
+.splash-fill{height:100%;width:0%;background:linear-gradient(135deg,#00d4ff,#7c3aed);border-radius:10px;animation:fill 1.8s ease forwards;}
+@keyframes fill{0%{width:0%;}100%{width:100%;}}
 </style>
-
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <img class="splash-img" src="icon-512.png" alt="UniPortal AU Logo"/>
+  <div class="splash-logo">UniPortal AU</div>
+  <div class="splash-sub">ANDHRA UNIVERSITY</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
 <!-- TOPBAR -->
+  
 <div class="topbar">
   <div class="logo-wrap">
     <div class="logo">UniPortal AU</div>
@@ -850,7 +866,16 @@ function setRec(type,val){
   document.querySelectorAll(`#rec${type.charAt(0).toUpperCase()+type.slice(1)} .rec-btn`).forEach(b=>b.classList.toggle('on',b.textContent===val));
   if(recSel.branch&&recSel.goal) showRec();
 }
-
+// SPLASH SCREEN
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    splash.classList.add('hide');
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 500);
+  }, 2000);
+});
 function showRec(){
   const recs={
     'CSE_Job':'Skill Development Centre (Python, Cloud), Cyber Labs, NPTEL Certifications, Striver\'s DSA Sheet, TCS iON Certifications',
